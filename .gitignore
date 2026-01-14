@@ -1,0 +1,36 @@
+# Data files (too large for git)
+data/raw/*.csv
+data/raw/*.xlsx
+data/raw/*.zip
+data/processed/*.csv
+data/processed/*.parquet
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+ENV/
+.venv
+
+# Jupyter
+.ipynb_checkpoints/
+*.ipynb_checkpoints
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
+
+# Reports drafts (keep only final)
+reports/drafts/*
+
+# Temporary files
+*.tmp
+*.temp
+*.log

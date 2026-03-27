@@ -291,3 +291,20 @@ This project is created for the UIDAI Data Hackathon 2026. All analysis is origi
 ---
 
 *Last Updated: January 14, 2026*
+
+---
+
+<!-- codex:project-diagram:start -->
+
+## Project Diagram
+
+```mermaid
+flowchart LR
+    A["Datasets"] --> B["Analysis"]
+    B --> C["Dashboards"]
+    C --> D["Reports"]
+```
+
+_Analysis pipeline from raw data to dashboards and report outputs._
+
+<!-- codex:project-diagram:end -->

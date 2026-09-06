@@ -2,7 +2,7 @@ name: Deploy GitHub Pages
 
 on:
   push:
-    branches: [main, cursor/uidai-pages-site-a91e]
+    branches: [main]
   workflow_dispatch:
 
 permissions:

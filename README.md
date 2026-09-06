@@ -1,9 +1,13 @@
-# 🏆 UIDAI Data Hackathon 2026
+# UIDAI Data Hackathon 2026
 
-**Unlocking Societal Trends in Aadhaar Enrolment and Updates**
+**Unlocking societal trends in Aadhaar enrolment and updates**
 
+This project analyses **4.9 million** official Aadhaar enrolment and update transactions (Mar–Dec 2025) to find coverage gaps, centre-capacity strain, and biometric-quality issues UIDAI can act on.
+
+**Live site:** [https://mangeshraut712.github.io/UIDAI-Data-Hackathon-2026/](https://mangeshraut712.github.io/UIDAI-Data-Hackathon-2026/) — charts, interactive dashboard, and the written report.
+
+[![Live site](https://img.shields.io/badge/GitHub%20Pages-live-0f766e.svg)](https://mangeshraut712.github.io/UIDAI-Data-Hackathon-2026/)
 [![Python](https://img.shields.io/badge/Python-3.12+-blue.svg)](https://python.org)
-[![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 [![Hackathon](https://img.shields.io/badge/UIDAI-Hackathon%202026-orange.svg)](https://event.data.gov.in)
 
 ---

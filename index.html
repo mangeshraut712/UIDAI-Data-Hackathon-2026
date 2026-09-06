@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>UIDAI Data Hackathon 2026 — Aadhaar Enrolment Analysis</title>
+  <meta name="description" content="Public analysis of 4.9 million Aadhaar enrolment and update transactions for UIDAI Data Hackathon 2026. Charts, interactive dashboard, and policy recommendations.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Serif:wght@500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --ink: #0f172a;
+      --muted: #475569;
+      --line: #e2e8f0;
+      --paper: #f8fafc;
+      --card: #ffffff;
+      --accent: #0f766e;
+      --accent-2: #c2410c;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: "IBM Plex Sans", system-ui, sans-serif;
+      color: var(--ink);
+      background: var(--paper);
+      line-height: 1.55;
+    }
+    a { color: var(--accent); }
+    header {
+      background: linear-gradient(135deg, #0b3d4a 0%, #0f766e 55%, #134e4a 100%);
+      color: #fff;
+      padding: 3.5rem 1.5rem 3rem;
+    }
+    .wrap { max-width: 1100px; margin: 0 auto; }
+    .eyebrow {
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      font-size: 0.75rem;
+      font-weight: 600;
+      opacity: 0.85;
+    }
+    h1 {
+      font-family: "IBM Plex Serif", Georgia, serif;
+      font-size: clamp(1.8rem, 4vw, 2.6rem);
+      margin: 0.6rem 0 0.8rem;
+      font-weight: 600;
+    }
+    .lede { max-width: 44rem; font-size: 1.05rem; opacity: 0.95; }
+    .actions { margin-top: 1.5rem; display: flex; flex-wrap: wrap; gap: 0.75rem; }
+    .btn {
+      display: inline-block;
+      padding: 0.65rem 1.1rem;
+      border-radius: 6px;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 0.95rem;
+    }
+    .btn-primary { background: #fff; color: #0b3d4a; }
+    .btn-ghost { background: transparent; color: #fff; border: 1px solid rgba(255,255,255,0.45); }
+    main { padding: 2.5rem 1.5rem 4rem; }
+    h2 {
+      font-family: "IBM Plex Serif", Georgia, serif;
+      font-size: 1.45rem;
+      margin: 2.2rem 0 0.8rem;
+    }
+    p.purpose { max-width: 46rem; color: var(--muted); }
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 0.9rem;
+      margin: 1.5rem 0 0.5rem;
+    }
+    .stat {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 1rem;
+    }
+    .stat b { display: block; font-size: 1.35rem; }
+    .stat span { color: var(--muted); font-size: 0.85rem; }
+    .gallery {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 1rem;
+    }
+    .card {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      overflow: hidden;
+      text-decoration: none;
+      color: inherit;
+      display: flex;
+      flex-direction: column;
+    }
+    .card img {
+      width: 100%;
+      height: 150px;
+      object-fit: cover;
+      background: #e2e8f0;
+    }
+    .card .meta { padding: 0.75rem 0.9rem 1rem; }
+    .card h3 { margin: 0 0 0.3rem; font-size: 0.95rem; }
+    .card p { margin: 0; color: var(--muted); font-size: 0.82rem; }
+    .links {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 0.9rem;
+    }
+    .link-card {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 1.1rem 1.15rem;
+    }
+    .link-card h3 { margin: 0 0 0.35rem; font-size: 1rem; }
+    .link-card p { margin: 0 0 0.7rem; color: var(--muted); font-size: 0.9rem; }
+    ul.insights { color: var(--muted); padding-left: 1.15rem; }
+    footer {
+      border-top: 1px solid var(--line);
+      padding: 1.5rem;
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="wrap">
+      <div class="eyebrow">UIDAI Data Hackathon 2026 · Team UIDAI_4879</div>
+      <h1>Unlocking societal trends in Aadhaar enrolment and updates</h1>
+      <p class="lede">
+        This site publishes the analysis outputs from a study of 4.9 million Aadhaar
+        enrolment, demographic-update, and biometric-update records (Mar–Dec 2025).
+        The goal is to surface coverage gaps, capacity strain, and quality issues
+        that UIDAI can act on — not just charts for a submission packet.
+      </p>
+      <div class="actions">
+        <a class="btn btn-primary" href="visualizations/interactive/dashboard.html">Open interactive dashboard</a>
+        <a class="btn btn-ghost" href="reports/report/UIDAI%20Data%20Hackathon%202026%20Report.pdf">Read the report (PDF)</a>
+      </div>
+    </div>
+  </header>
+  <main class="wrap">
+    <h2>Why this analysis exists</h2>
+    <p class="purpose">
+      UIDAI asked participants to find meaningful patterns in official Aadhaar
+      transaction data. This work asks three operational questions: where child
+      enrolment lags, when enrolment centres are under-used, and which districts
+      absorb disproportionate load. Findings are validated with statistical tests
+      and turned into recommendations (weekend service pilots, North-East mobile
+      drives, hotspot capacity).
+    </p>
+    <div class="stats">
+      <div class="stat"><b>4.94M</b><span>records analysed</span></div>
+      <div class="stat"><b>3</b><span>transaction types</span></div>
+      <div class="stat"><b>14</b><span>publication charts</span></div>
+      <div class="stat"><b>7</b><span>priority insights</span></div>
+    </div>
+
+    <h2>Priority findings</h2>
+    <ul class="insights">
+      <li>Child enrolment in several North-East states is 19–29% versus ~65% nationally.</li>
+      <li>Saturday volume is ~62% lower than weekday peaks — roughly 270k extra enrolments per month if weekend service is added in metros.</li>
+      <li>Fifteen districts handle 17% of enrolments (about 93/day vs a 60/day target).</li>
+      <li>Biometric updates outpace demographic updates (~1.4:1), a signal of rework and device quality issues.</li>
+    </ul>
+
+    <h2>Charts</h2>
+    <p class="purpose">Static 300 DPI figures from the analysis pipeline. Click any card to open the full image.</p>
+    <div class="gallery">
+      <a class="card" href="visualizations/infographics/01_executive_summary.png">
+        <img src="visualizations/infographics/01_executive_summary.png" alt="Executive summary infographic">
+        <div class="meta"><h3>Executive summary</h3><p>Infographic of the seven insights and recommended actions.</p></div>
+      </a>
+      <a class="card" href="visualizations/charts/01_temporal_trends.png">
+        <img src="visualizations/charts/01_temporal_trends.png" alt="Temporal trends">
+        <div class="meta"><h3>Temporal trends</h3><p>Daily enrolment volume and rolling averages.</p></div>
+      </a>
+      <a class="card" href="visualizations/charts/02_geographic_analysis.png">
+        <img src="visualizations/charts/02_geographic_analysis.png" alt="Geographic analysis">
+        <div class="meta"><h3>Geographic analysis</h3><p>State-level enrolment and update load.</p></div>
+      </a>
+      <a class="card" href="visualizations/charts/03_age_demographics.png">
+        <img src="visualizations/charts/03_age_demographics.png" alt="Age demographics">
+        <div class="meta"><h3>Age demographics</h3><p>0–5, 5–17, and 18+ enrolment shares.</p></div>
+      </a>
+      <a class="card" href="visualizations/charts/04_unique_insights.png">
+        <img src="visualizations/charts/04_unique_insights.png" alt="Unique insights">
+        <div class="meta"><h3>Unique insights</h3><p>Weekend gap and other operational anomalies.</p></div>
+      </a>
+      <a class="card" href="visualizations/charts/05_state_clustering.png">
+        <img src="visualizations/charts/05_state_clustering.png" alt="State clustering">
+        <div class="meta"><h3>State clustering</h3><p>K-means segments of state behaviour.</p></div>
+      </a>
+      <a class="card" href="visualizations/charts/06_time_series_forecast.png">
+        <img src="visualizations/charts/06_time_series_forecast.png" alt="Time series forecast">
+        <div class="meta"><h3>Time-series forecast</h3><p>Demand trajectory with high variance.</p></div>
+      </a>
+      <a class="card" href="visualizations/charts/07_advanced_correlation.png">
+        <img src="visualizations/charts/07_advanced_correlation.png" alt="Correlation matrix">
+        <div class="meta"><h3>Correlation matrix</h3><p>Enrolment vs demographic vs biometric updates.</p></div>
+      </a>
+      <a class="card" href="visualizations/charts/08_geographic_heat_map.png">
+        <img src="visualizations/charts/08_geographic_heat_map.png" alt="Geographic heat map">
+        <div class="meta"><h3>Geographic heat map</h3><p>District hotspots and coverage intensity.</p></div>
+      </a>
+      <a class="card" href="visualizations/charts/09_india_state_analysis.png">
+        <img src="visualizations/charts/09_india_state_analysis.png" alt="India state analysis">
+        <div class="meta"><h3>India state analysis</h3><p>National map of enrolment patterns.</p></div>
+      </a>
+      <a class="card" href="visualizations/charts/10_policy_impact_dashboard.png">
+        <img src="visualizations/charts/10_policy_impact_dashboard.png" alt="Policy impact dashboard">
+        <div class="meta"><h3>Policy impact</h3><p>ROI of weekend pilots and NE drives.</p></div>
+      </a>
+      <a class="card" href="visualizations/charts/11_tsne_pca_states.png">
+        <img src="visualizations/charts/11_tsne_pca_states.png" alt="t-SNE and PCA">
+        <div class="meta"><h3>t-SNE / PCA</h3><p>Low-dimensional state pattern discovery.</p></div>
+      </a>
+      <a class="card" href="visualizations/charts/12_prophet_forecast.png">
+        <img src="visualizations/charts/12_prophet_forecast.png" alt="Prophet-style forecast">
+        <div class="meta"><h3>Model-based forecast</h3><p>Seasonal projection of enrolment demand.</p></div>
+      </a>
+      <a class="card" href="visualizations/charts/13_monte_carlo_simulation.png">
+        <img src="visualizations/charts/13_monte_carlo_simulation.png" alt="Monte Carlo simulation">
+        <div class="meta"><h3>Monte Carlo</h3><p>Uncertainty around capacity and uptake.</p></div>
+      </a>
+    </div>
+
+    <h2>Reports and interactive views</h2>
+    <div class="links">
+      <div class="link-card">
+        <h3>Interactive dashboard</h3>
+        <p>Plotly views of temporal, geographic, and demographic structure.</p>
+        <a href="visualizations/interactive/dashboard.html">Open dashboard →</a>
+      </div>
+      <div class="link-card">
+        <h3>Full analysis report</h3>
+        <p>Hackathon write-up: methods, tests, visuals, and recommendations.</p>
+        <a href="reports/report/UIDAI%20Data%20Hackathon%202026%20Report.pdf">Download PDF →</a>
+      </div>
+      <div class="link-card">
+        <h3>Source repository</h3>
+        <p>Python pipeline, data loaders, and chart generators on GitHub.</p>
+        <a href="https://github.com/mangeshraut712/UIDAI-Data-Hackathon-2026">View code →</a>
+      </div>
+    </div>
+  </main>
+  <footer>
+    <div class="wrap">
+      Mangesh Bharat Raut · UIDAI Data Hackathon 2026 · analysis of official UIDAI datasets only.
+    </div>
+  </footer>
+</body>
+</html>

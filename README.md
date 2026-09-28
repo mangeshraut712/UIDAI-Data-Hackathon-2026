@@ -12,6 +12,24 @@ This project analyses **4.9 million** official Aadhaar enrolment and update tran
 
 ---
 
+## Screenshots
+
+Framed captures of the live site (current UI).
+
+<div align="center">
+
+<img src="docs/screenshots/01-home.webp" alt="Hackathon site home: Aadhaar enrolment analysis and coverage-gap findings" width="720" />
+
+<img src="docs/screenshots/02-charts.webp" alt="Chart gallery of fourteen publication figures from the analysis" width="720" />
+
+<img src="docs/screenshots/03-dashboard.webp" alt="Interactive dashboard header with dataset size, pipeline time, and ROI" width="720" />
+
+<img src="docs/screenshots/04-plotly.webp" alt="Plotly temporal chart of daily Aadhaar enrolments over 2025" width="720" />
+
+</div>
+
+---
+
 ## 👤 Participant Information
 
 | Field | Value |

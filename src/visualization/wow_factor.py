@@ -413,5 +413,5 @@ class WowFactorVisualizations:
 
 
 if __name__ == "__main__":
-    viz = WowFactorVisualizations('/Users/mangeshraut/Downloads/UIDAI Data Hackathon 2026')
+    viz = WowFactorVisualizations(Path(__file__).resolve().parents[2])
     viz.run_all()

@@ -612,6 +612,6 @@ class IITLevelAnalytics:
 
 
 if __name__ == "__main__":
-    base_dir = Path('/Users/mangeshraut/Downloads/UIDAI Data Hackathon 2026')
+    base_dir = Path(__file__).resolve().parents[2]
     analytics = IITLevelAnalytics(base_dir)
     results = analytics.run_all()

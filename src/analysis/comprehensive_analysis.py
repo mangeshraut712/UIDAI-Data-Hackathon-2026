@@ -409,7 +409,7 @@ class UIDAIAnalyzer:
 
 if __name__ == "__main__":
     # Initialize analyzer
-    analyzer = UIDAIAnalyzer('/Users/mangeshraut/Downloads/UIDAI Data Hackathon 2026')
+    analyzer = UIDAIAnalyzer(Path(__file__).resolve().parents[2])
     
     # Run complete analysis
     print(" UIDAI DATA HACKATHON 2026 - COMPREHENSIVE ANALYSIS")

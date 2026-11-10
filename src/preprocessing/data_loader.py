@@ -129,10 +129,14 @@ def handle_missing_values(df: pd.DataFrame, strategy: str = 'report') -> pd.Data
         return df
     
     elif strategy == 'fill_mode':
-        for col in df.columns:
-            if df[col].isna().sum() > 0:
-                df[col].fillna(df[col].mode()[0], inplace=True)
-        return df
+        out = df.copy()
+        for col in out.columns:
+            if out[col].isna().any():
+                mode = out[col].mode()
+                if len(mode) == 0:
+                    continue
+                out[col] = out[col].fillna(mode.iloc[0])
+        return out
     
     return df
 

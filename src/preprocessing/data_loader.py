@@ -316,21 +316,30 @@ def normalize_state_names(df: pd.DataFrame, state_column: str = 'state') -> pd.D
         'Dadra and Nagar Haveli and Daman and Diu': 'Dadra And Nagar Haveli And Daman And Diu',
     }
     
-    # Invalid entries to filter out (numeric codes, etc.)
-    INVALID_STATES = ['100000', '0', 'NA', 'N/A', 'None', 'null', '', ' ']
-    
+    # Invalid entries to filter out (numeric codes, missing sentinels, etc.)
+    INVALID_STATES = {
+        '100000', '0', 'NA', 'N/A', 'NONE', 'NULL', 'NAN', '<NA>', '',
+    }
+
     df = df.copy()
-    
+    if state_column not in df.columns:
+        raise KeyError(f"state column not found: {state_column}")
+
+    original_len = len(df)
+    df = df[df[state_column].notna()].copy()
+
     # Convert state column to string for safety
     df[state_column] = df[state_column].astype(str)
-    
+
     # Strip whitespace and normalize multiple spaces
     df[state_column] = df[state_column].str.strip()
     df[state_column] = df[state_column].str.replace(r'\s+', ' ', regex=True)
-    
-    # Filter out invalid entries
-    original_len = len(df)
-    df = df[~df[state_column].isin(INVALID_STATES)]
+
+    # Filter out invalid entries (compare case-insensitively so "nan" cannot
+    # survive and be title-cased into the fake state name "Nan")
+    df = df[~df[state_column].str.upper().isin(INVALID_STATES)]
+    df = df[df[state_column] != '']
+
     filtered_count = original_len - len(df)
     
     if filtered_count > 0:

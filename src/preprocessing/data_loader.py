@@ -53,7 +53,11 @@ def data_quality_report(df: pd.DataFrame, name: str = "Dataset") -> Dict:
         'columns': len(df.columns),
         'memory_mb': df.memory_usage(deep=True).sum() / 1024**2,
         'missing_cells': df.isna().sum().sum(),
-        'missing_percent': (df.isna().sum().sum() / (len(df) * len(df.columns))) * 100,
+        'missing_percent': (
+            0.0
+            if len(df) == 0 or len(df.columns) == 0
+            else (df.isna().sum().sum() / (len(df) * len(df.columns))) * 100
+        ),
         'duplicates': df.duplicated().sum(),
         'numeric_columns': len(df.select_dtypes(include=[np.number]).columns),
         'categorical_columns': len(df.select_dtypes(include=['object']).columns),

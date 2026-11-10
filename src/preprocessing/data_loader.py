@@ -329,20 +329,29 @@ def create_age_groups(ages: pd.Series) -> pd.Series:
     return pd.cut(ages, bins=bins, labels=labels, include_lowest=True)
 
 
-def aggregate_by_time(df: pd.DataFrame, date_column: str, freq: str = 'M') -> pd.DataFrame:
+def aggregate_by_time(df: pd.DataFrame, date_column: str, freq: str = 'ME') -> pd.DataFrame:
     """
     Aggregate data by time period
     
     Args:
         df: Input dataframe
         date_column: Name of date column
-        freq: Frequency ('D', 'W', 'M', 'Q', 'Y')
+        freq: Frequency ('D', 'W', 'ME', 'QE', 'YE'). The aliases 'M', 'Q',
+            and 'Y' are accepted and mapped to the current pandas endings.
         
     Returns:
-        pd.DataFrame: Aggregated data
+        pd.DataFrame: Row counts per period, with the period as the index
     """
-    df[date_column] = pd.to_datetime(df[date_column])
-    return df.groupby(pd.Grouper(key=date_column, freq=freq))
+    freq_map = {'M': 'ME', 'Q': 'QE', 'Y': 'YE'}
+    grouped_freq = freq_map.get(freq, freq)
+    work = df.copy()
+    work[date_column] = pd.to_datetime(work[date_column])
+    return (
+        work.groupby(pd.Grouper(key=date_column, freq=grouped_freq))
+        .size()
+        .rename('count')
+        .to_frame()
+    )
 
 
 def save_processed_data(df: pd.DataFrame, filepath: str, format: str = 'parquet'):

@@ -328,7 +328,8 @@ def create_age_groups(ages: pd.Series) -> pd.Series:
     Returns:
         pd.Series: Age group categories
     """
-    bins = [0, 5, 17, 25, 35, 45, 55, 65, 100]
+    # Right-closed bins: 65 must land in 65+, and ages over 100 must not be dropped.
+    bins = [0, 5, 17, 25, 35, 45, 55, 64, float('inf')]
     labels = ['0-5', '6-17', '18-25', '26-35', '36-45', '46-55', '56-65', '65+']
     return pd.cut(ages, bins=bins, labels=labels, include_lowest=True)
 

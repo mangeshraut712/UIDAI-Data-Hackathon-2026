@@ -123,10 +123,14 @@ def handle_missing_values(df: pd.DataFrame, strategy: str = 'report') -> pd.Data
         return df.fillna(0)
     
     elif strategy == 'fill_median':
-        numeric_cols = df.select_dtypes(include=[np.number]).columns
+        out = df.copy()
+        numeric_cols = out.select_dtypes(include=[np.number]).columns
         for col in numeric_cols:
-            df[col].fillna(df[col].median(), inplace=True)
-        return df
+            median = out[col].median()
+            if pd.isna(median):
+                continue
+            out[col] = out[col].fillna(median)
+        return out
     
     elif strategy == 'fill_mode':
         out = df.copy()

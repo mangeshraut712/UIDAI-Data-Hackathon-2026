@@ -367,26 +367,30 @@ def aggregate_by_time(df: pd.DataFrame, date_column: str, freq: str = 'ME') -> p
     )
 
 
-def save_processed_data(df: pd.DataFrame, filepath: str, format: str = 'parquet'):
+def save_processed_data(df: pd.DataFrame, filepath: Union[str, Path], format: str = 'parquet'):
     """
     Save processed data in efficient format
     
     Args:
         df: DataFrame to save
-        filepath: Output filepath
-        format: 'parquet', 'csv', or 'excel'
+        filepath: Output filepath (str or Path)
+        format: 'parquet', 'csv', or 'excel' (matched case-insensitively)
     """
+    path = Path(filepath)
+    kind = (format or '').strip().lower()
     try:
-        if format == 'parquet':
-            df.to_parquet(filepath, index=False, compression='gzip')
-        elif format == 'csv':
-            df.to_csv(filepath, index=False)
-        elif format == 'excel':
-            df.to_excel(filepath, index=False)
+        if kind == 'parquet':
+            df.to_parquet(path, index=False, compression='gzip')
+        elif kind == 'csv':
+            df.to_csv(path, index=False)
+        elif kind == 'excel':
+            df.to_excel(path, index=False)
+        else:
+            raise ValueError(f"Unsupported format: {format}")
         
-        print(f" Saved {len(df):,} rows to {filepath}")
+        print(f" Saved {len(df):,} rows to {path}")
     except Exception as e:
-        print(f" Error saving to {filepath}: {e}")
+        print(f" Error saving to {path}: {e}")
         raise
 
 

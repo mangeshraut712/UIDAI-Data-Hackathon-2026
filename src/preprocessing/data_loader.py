@@ -3,36 +3,40 @@ Data preprocessing utilities for UIDAI Hackathon
 """
 import pandas as pd
 import numpy as np
-from typing import Dict, List, Tuple, Optional
+from pathlib import Path
+from typing import Dict, List, Tuple, Optional, Union
 import warnings
 warnings.filterwarnings('ignore')
 
 
-def load_data(filepath: str, **kwargs) -> pd.DataFrame:
+def load_data(filepath: Union[str, Path], **kwargs) -> pd.DataFrame:
     """
     Load data from various formats with error handling
     
     Args:
-        filepath: Path to data file
+        filepath: Path to data file (str or Path). The suffix is matched
+            case-insensitively (.csv, .xls, .xlsx, .parquet).
         **kwargs: Additional arguments for pandas read functions
         
     Returns:
         pd.DataFrame: Loaded data
     """
+    path = Path(filepath)
+    suffix = path.suffix.lower()
     try:
-        if filepath.endswith('.csv'):
-            df = pd.read_csv(filepath, **kwargs)
-        elif filepath.endswith(('.xls', '.xlsx')):
-            df = pd.read_excel(filepath, **kwargs)
-        elif filepath.endswith('.parquet'):
-            df = pd.read_parquet(filepath, **kwargs)
+        if suffix == '.csv':
+            df = pd.read_csv(path, **kwargs)
+        elif suffix in {'.xls', '.xlsx'}:
+            df = pd.read_excel(path, **kwargs)
+        elif suffix == '.parquet':
+            df = pd.read_parquet(path, **kwargs)
         else:
-            raise ValueError(f"Unsupported file format: {filepath}")
+            raise ValueError(f"Unsupported file format: {path}")
         
-        print(f" Loaded {len(df):,} rows and {len(df.columns)} columns from {filepath}")
+        print(f" Loaded {len(df):,} rows and {len(df.columns)} columns from {path}")
         return df
     except Exception as e:
-        print(f" Error loading {filepath}: {e}")
+        print(f" Error loading {path}: {e}")
         raise
 
 

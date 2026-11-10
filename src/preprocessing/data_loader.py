@@ -3,6 +3,7 @@ Data preprocessing utilities for UIDAI Hackathon
 """
 import pandas as pd
 import numpy as np
+import re
 from pathlib import Path
 from typing import Dict, List, Tuple, Optional, Union
 import warnings
@@ -84,6 +85,25 @@ def data_quality_report(df: pd.DataFrame, name: str = "Dataset") -> Dict:
     return report
 
 
+def _unique_column_names(names: List[str]) -> List[str]:
+    """Return cleaned names, suffixing later copies of a repeated slug."""
+    used: dict[str, int] = {}
+    unique: List[str] = []
+    for raw in names:
+        slug = (
+            str(raw)
+            .lower()
+            .replace(' ', '_')
+            .replace('-', '_')
+        )
+        slug = re.sub(r'[^a-z0-9_]', '', slug).strip('_')
+        slug = re.sub(r'_+', '_', slug) or 'column'
+        count = used.get(slug, 0) + 1
+        used[slug] = count
+        unique.append(slug if count == 1 else f'{slug}_{count}')
+    return unique
+
+
 def clean_column_names(df: pd.DataFrame) -> pd.DataFrame:
     """
     Standardize column names (lowercase, replace spaces with underscores)
@@ -92,10 +112,11 @@ def clean_column_names(df: pd.DataFrame) -> pd.DataFrame:
         df: Input dataframe
         
     Returns:
-        pd.DataFrame: DataFrame with cleaned column names
+        pd.DataFrame: A copy with cleaned, unique column names
     """
-    df.columns = df.columns.str.lower().str.replace(' ', '_').str.replace('[^a-z0-9_]', '', regex=True)
-    return df
+    out = df.copy()
+    out.columns = _unique_column_names(list(out.columns))
+    return out
 
 
 def handle_missing_values(df: pd.DataFrame, strategy: str = 'report') -> pd.DataFrame:

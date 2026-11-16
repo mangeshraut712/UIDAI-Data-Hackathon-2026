@@ -162,8 +162,11 @@ def handle_missing_values(df: pd.DataFrame, strategy: str = 'report') -> pd.Data
                     continue
                 out[col] = out[col].fillna(mode.iloc[0])
         return out
-    
-    return df
+
+    raise ValueError(
+        f"Unknown missing-value strategy {strategy!r}. "
+        "Use 'report', 'drop', 'fill_zero', 'fill_median', or 'fill_mode'."
+    )
 
 
 def detect_outliers_iqr(df: pd.DataFrame, column: str, multiplier: float = 1.5) -> pd.Series:

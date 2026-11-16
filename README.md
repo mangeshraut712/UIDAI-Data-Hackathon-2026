@@ -132,7 +132,6 @@ UIDAI Data Hackathon 2026/
 ├── 📂 reports/
 │   └── report/                           # OFFICIAL SUBMISSION FILES
 │       ├── UIDAI Data Hackathon 2026 Report.pdf # Final Report PDF
-│       ├── DREXEL UNIVERSITY ID.pdf             # Student ID
 │       └── Report_Source.tex                    # LaTeX Source
 │
 ├── 📄 SUBMISSION_CHECKLIST.md            # Final verification checklist
@@ -275,7 +274,7 @@ python src/visualization/interactive_dashboard.py
 
 ### Files to Submit
 1. **Project Report PDF** - Found in `reports/report/`
-2. **Student ID PDF** - Found in `reports/report/`
+2. **Student ID PDF** - Keep this personal document outside the public repository and submit it directly through the official portal.
 
 ### Submission Portal
 - URL: [https://event.data.gov.in](https://event.data.gov.in/challenge/uidai-data-hackathon-2026/)

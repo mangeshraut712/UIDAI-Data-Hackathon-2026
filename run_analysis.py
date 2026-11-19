@@ -8,6 +8,7 @@ import sys
 import time
 from pathlib import Path
 import subprocess
+import threading
 import warnings
 
 # Silence non-critical library warnings in the main orchestrator
@@ -40,6 +41,40 @@ def check_environment():
     return True
 
 
+MODULE_TIMEOUT_SECONDS = 600
+
+
+def stream_process(cmd, timeout, emit=print):
+    """Run cmd, emitting its output live; kill it after `timeout` seconds.
+
+    Returns (returncode, timed_out). Reading stdout blocks until the child
+    exits, so a wait(timeout=...) after the read loop can never time out;
+    a timer has to kill the child instead.
+    """
+    process = subprocess.Popen(
+        cmd,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.STDOUT,
+        text=True,
+        bufsize=1,
+    )
+    timed_out = threading.Event()
+
+    def kill():
+        timed_out.set()
+        process.kill()
+
+    timer = threading.Timer(timeout, kill)
+    timer.start()
+    try:
+        for line in process.stdout:
+            emit(f"  {line.strip()}")
+        process.wait()
+    finally:
+        timer.cancel()
+    return process.returncode, timed_out.is_set()
+
+
 def execute_module(module_path, description):
     """Run analysis module and capture output"""
     print(f"\n{C['BOLD']}{C['BLUE']}{'='*80}{C['END']}")
@@ -49,24 +84,15 @@ def execute_module(module_path, description):
     start = time.time()
     
     try:
-        # Run with real-time output stream for better user experience
-        process = subprocess.Popen(
-            [sys.executable, str(module_path)],
-            stdout=subprocess.PIPE,
-            stderr=subprocess.STDOUT,
-            text=True,
-            bufsize=1,
-            universal_newlines=True
+        # Run with real-time output stream; the timer kills a hung module (NNs need time).
+        returncode, timed_out = stream_process(
+            [sys.executable, str(module_path)], MODULE_TIMEOUT_SECONDS
         )
-        
-        # Print output line by line as it happens
-        for line in process.stdout:
-            print(f"  {line.strip()}")
-            
-        process.wait(timeout=600)  # Increased timeout for NNs
-        
+        if timed_out:
+            raise subprocess.TimeoutExpired([sys.executable, str(module_path)], MODULE_TIMEOUT_SECONDS)
+
         duration = time.time() - start
-        if process.returncode == 0:
+        if returncode == 0:
             print(f"\n{C['GREEN']}[DONE] SUCCESS:{C['END']} {description}")
             print(f"{C['CYAN']}Duration:{C['END']} {duration:.1f}s")
             return True

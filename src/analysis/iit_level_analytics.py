@@ -47,6 +47,11 @@ COLORS = {
 }
 
 
+def day_offsets(dates: pd.Series, origin: pd.Timestamp) -> np.ndarray:
+    """Calendar days since origin, so seasonal features keep their phase across missing days."""
+    return (pd.to_datetime(dates) - origin).dt.days.to_numpy()
+
+
 @dataclass
 class IITLevelAnalytics:
     """Advanced analytics that IIT students would implement"""
@@ -213,7 +218,8 @@ class IITLevelAnalytics:
         df_ts['is_weekend'] = (df_ts['day_of_week'] >= 5).astype(int)
         df_ts['is_month_start'] = (df_ts['day_of_month'] <= 3).astype(int)
         df_ts['is_month_end'] = (df_ts['day_of_month'] >= 28).astype(int)
-        df_ts['day_index'] = np.arange(len(df_ts))
+        # Days with no records are absent from the index, so count calendar days, not rows.
+        df_ts['day_index'] = day_offsets(df_ts['ds'], df_ts['ds'].min())
         
         # Add Fourier features for seasonality (Prophet-style)
         for period, order in [(7, 3), (30.5, 5)]:  # Weekly and monthly
@@ -262,7 +268,7 @@ class IITLevelAnalytics:
         df_future['is_weekend'] = (df_future['day_of_week'] >= 5).astype(int)
         df_future['is_month_start'] = (df_future['day_of_month'] <= 3).astype(int)
         df_future['is_month_end'] = (df_future['day_of_month'] >= 28).astype(int)
-        df_future['day_index'] = np.arange(len(df_ts), len(df_ts) + len(df_future))
+        df_future['day_index'] = day_offsets(df_future['ds'], df_ts['ds'].min())
         
         for period, order in [(7, 3), (30.5, 5)]:
             for i in range(1, order + 1):

@@ -27,3 +27,19 @@ def test_normalize_state_names_missing_column_raises() -> None:
         assert "state" in str(exc)
     else:
         raise AssertionError("expected KeyError")
+
+
+def test_normalize_state_names_alias_is_case_insensitive() -> None:
+    frame = pd.DataFrame({
+        "state": ["Jammu & Kashmir", "jammu & kashmir", "Jammu and Kashmir", "Orissa", "Pondicherry"],
+    })
+
+    cleaned = normalize_state_names(frame)
+
+    assert list(cleaned["state"]) == [
+        "Jammu And Kashmir",
+        "Jammu And Kashmir",
+        "Jammu And Kashmir",
+        "Odisha",
+        "Puducherry",
+    ]

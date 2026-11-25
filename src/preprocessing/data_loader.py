@@ -350,6 +350,13 @@ def normalize_state_names(df: pd.DataFrame, state_column: str = 'state') -> pd.D
     
     # Apply state name mapping
     df[state_column] = df[state_column].replace(STATE_MAPPING)
+
+    # Aliases are listed in a few fixed casings; match any other casing
+    # (e.g. "Jammu & Kashmir") case-insensitively.
+    upper_mapping = {k.upper(): v for k, v in STATE_MAPPING.items()}
+    df[state_column] = (
+        df[state_column].str.upper().map(upper_mapping).fillna(df[state_column])
+    )
     
     # Title case for remaining states (basic normalization)
     # Only apply to all-caps entries that weren't in the mapping

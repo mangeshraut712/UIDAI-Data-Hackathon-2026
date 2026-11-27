@@ -10,6 +10,120 @@ import warnings
 warnings.filterwarnings('ignore')
 
 
+# State aliases -> canonical names. Matched case-insensitively via
+# UPPER_STATE_MAPPING, so an alias only needs to be listed in one casing.
+STATE_MAPPING = {
+    # West Bengal variations (including typos)
+    'WESTBENGAL': 'West Bengal',
+    'Westbengal': 'West Bengal',
+    'WEST BENGAL': 'West Bengal',
+    'westbengal': 'West Bengal',
+    'West Bangal': 'West Bengal',  # Typo
+    'west bengal': 'West Bengal',
+    'West  Bengal': 'West Bengal',  # Double space
+    
+    # Odisha variations
+    'ODISHA': 'Odisha',
+    'Orissa': 'Odisha',
+    'ORISSA': 'Odisha',
+    'odisha': 'Odisha',
+    
+    # Andhra Pradesh variations
+    'ANDHRA PRADESH': 'Andhra Pradesh',
+    'andhra pradesh': 'Andhra Pradesh',
+    'Andhra pradesh': 'Andhra Pradesh',
+    'ANDHRAPRADESH': 'Andhra Pradesh',
+    
+    # Other common variations
+    'MAHARASHTRA': 'Maharashtra',
+    'maharashtra': 'Maharashtra',
+    'KARNATAKA': 'Karnataka',
+    'karnataka': 'Karnataka',
+    'TAMIL NADU': 'Tamil Nadu',
+    'TAMILNADU': 'Tamil Nadu',
+    'tamil nadu': 'Tamil Nadu',
+    'TELANGANA': 'Telangana',
+    'telangana': 'Telangana',
+    'KERALA': 'Kerala',
+    'kerala': 'Kerala',
+    'UTTAR PRADESH': 'Uttar Pradesh',
+    'UTTARPRADESH': 'Uttar Pradesh',
+    'uttar pradesh': 'Uttar Pradesh',
+    'MADHYA PRADESH': 'Madhya Pradesh',
+    'MADHYAPRADESH': 'Madhya Pradesh',
+    'madhya pradesh': 'Madhya Pradesh',
+    'RAJASTHAN': 'Rajasthan',
+    'rajasthan': 'Rajasthan',
+    'GUJARAT': 'Gujarat',
+    'gujarat': 'Gujarat',
+    'BIHAR': 'Bihar',
+    'bihar': 'Bihar',
+    'JHARKHAND': 'Jharkhand',
+    'jharkhand': 'Jharkhand',
+    'CHHATTISGARH': 'Chhattisgarh',
+    'CHATTISGARH': 'Chhattisgarh',
+    'chhattisgarh': 'Chhattisgarh',
+    'PUNJAB': 'Punjab',
+    'punjab': 'Punjab',
+    'HARYANA': 'Haryana',
+    'haryana': 'Haryana',
+    'HIMACHAL PRADESH': 'Himachal Pradesh',
+    'himachal pradesh': 'Himachal Pradesh',
+    'UTTARAKHAND': 'Uttarakhand',
+    'UTTARANCHAL': 'Uttarakhand',
+    'uttarakhand': 'Uttarakhand',
+    'JAMMU AND KASHMIR': 'Jammu And Kashmir',
+    'JAMMU & KASHMIR': 'Jammu And Kashmir',
+    'jammu and kashmir': 'Jammu And Kashmir',
+    'GOA': 'Goa',
+    'goa': 'Goa',
+    'ASSAM': 'Assam',
+    'assam': 'Assam',
+    'TRIPURA': 'Tripura',
+    'tripura': 'Tripura',
+    'MEGHALAYA': 'Meghalaya',
+    'meghalaya': 'Meghalaya',
+    'MANIPUR': 'Manipur',
+    'manipur': 'Manipur',
+    'NAGALAND': 'Nagaland',
+    'nagaland': 'Nagaland',
+    'MIZORAM': 'Mizoram',
+    'mizoram': 'Mizoram',
+    'ARUNACHAL PRADESH': 'Arunachal Pradesh',
+    'arunachal pradesh': 'Arunachal Pradesh',
+    'SIKKIM': 'Sikkim',
+    'sikkim': 'Sikkim',
+    'DELHI': 'Delhi',
+    'delhi': 'Delhi',
+    'NCT OF DELHI': 'Delhi',
+    'NCT Delhi': 'Delhi',
+    'CHANDIGARH': 'Chandigarh',
+    'chandigarh': 'Chandigarh',
+    'PUDUCHERRY': 'Puducherry',
+    'PONDICHERRY': 'Puducherry',
+    'puducherry': 'Puducherry',
+    'ANDAMAN AND NICOBAR': 'Andaman And Nicobar Islands',
+    'ANDAMAN & NICOBAR': 'Andaman And Nicobar Islands',
+    'ANDAMAN AND NICOBAR ISLANDS': 'Andaman And Nicobar Islands',
+    'LAKSHADWEEP': 'Lakshadweep',
+    'lakshadweep': 'Lakshadweep',
+    'LADAKH': 'Ladakh',
+    'ladakh': 'Ladakh',
+    'DADRA AND NAGAR HAVELI': 'Dadra And Nagar Haveli',
+    'DAMAN AND DIU': 'Daman And Diu',
+    'DAMAN & DIU': 'Daman And Diu',
+    'Dadra and Nagar Haveli and Daman and Diu': 'Dadra And Nagar Haveli And Daman And Diu',
+}
+
+# Invalid entries to filter out (numeric codes, missing sentinels, etc.)
+INVALID_STATES = {
+    '100000', '0', 'NA', 'N/A', 'NONE', 'NULL', 'NAN', '<NA>', '',
+}
+
+# Same mapping keyed by upper case, built once at import.
+UPPER_STATE_MAPPING = {k.upper(): v for k, v in STATE_MAPPING.items()}
+
+
 def load_data(filepath: Union[str, Path], **kwargs) -> pd.DataFrame:
     """
     Load data from various formats with error handling
@@ -215,114 +329,7 @@ def normalize_state_names(df: pd.DataFrame, state_column: str = 'state') -> pd.D
     Returns:
         pd.DataFrame: DataFrame with normalized state names
     """
-    # State name mapping for normalization (comprehensive)
-    STATE_MAPPING = {
-        # West Bengal variations (including typos)
-        'WESTBENGAL': 'West Bengal',
-        'Westbengal': 'West Bengal',
-        'WEST BENGAL': 'West Bengal',
-        'westbengal': 'West Bengal',
-        'West Bangal': 'West Bengal',  # Typo
-        'west bengal': 'West Bengal',
-        'West  Bengal': 'West Bengal',  # Double space
-        
-        # Odisha variations
-        'ODISHA': 'Odisha',
-        'Orissa': 'Odisha',
-        'ORISSA': 'Odisha',
-        'odisha': 'Odisha',
-        
-        # Andhra Pradesh variations
-        'ANDHRA PRADESH': 'Andhra Pradesh',
-        'andhra pradesh': 'Andhra Pradesh',
-        'Andhra pradesh': 'Andhra Pradesh',
-        'ANDHRAPRADESH': 'Andhra Pradesh',
-        
-        # Other common variations
-        'MAHARASHTRA': 'Maharashtra',
-        'maharashtra': 'Maharashtra',
-        'KARNATAKA': 'Karnataka',
-        'karnataka': 'Karnataka',
-        'TAMIL NADU': 'Tamil Nadu',
-        'TAMILNADU': 'Tamil Nadu',
-        'tamil nadu': 'Tamil Nadu',
-        'TELANGANA': 'Telangana',
-        'telangana': 'Telangana',
-        'KERALA': 'Kerala',
-        'kerala': 'Kerala',
-        'UTTAR PRADESH': 'Uttar Pradesh',
-        'UTTARPRADESH': 'Uttar Pradesh',
-        'uttar pradesh': 'Uttar Pradesh',
-        'MADHYA PRADESH': 'Madhya Pradesh',
-        'MADHYAPRADESH': 'Madhya Pradesh',
-        'madhya pradesh': 'Madhya Pradesh',
-        'RAJASTHAN': 'Rajasthan',
-        'rajasthan': 'Rajasthan',
-        'GUJARAT': 'Gujarat',
-        'gujarat': 'Gujarat',
-        'BIHAR': 'Bihar',
-        'bihar': 'Bihar',
-        'JHARKHAND': 'Jharkhand',
-        'jharkhand': 'Jharkhand',
-        'CHHATTISGARH': 'Chhattisgarh',
-        'CHATTISGARH': 'Chhattisgarh',
-        'chhattisgarh': 'Chhattisgarh',
-        'PUNJAB': 'Punjab',
-        'punjab': 'Punjab',
-        'HARYANA': 'Haryana',
-        'haryana': 'Haryana',
-        'HIMACHAL PRADESH': 'Himachal Pradesh',
-        'himachal pradesh': 'Himachal Pradesh',
-        'UTTARAKHAND': 'Uttarakhand',
-        'UTTARANCHAL': 'Uttarakhand',
-        'uttarakhand': 'Uttarakhand',
-        'JAMMU AND KASHMIR': 'Jammu And Kashmir',
-        'JAMMU & KASHMIR': 'Jammu And Kashmir',
-        'jammu and kashmir': 'Jammu And Kashmir',
-        'GOA': 'Goa',
-        'goa': 'Goa',
-        'ASSAM': 'Assam',
-        'assam': 'Assam',
-        'TRIPURA': 'Tripura',
-        'tripura': 'Tripura',
-        'MEGHALAYA': 'Meghalaya',
-        'meghalaya': 'Meghalaya',
-        'MANIPUR': 'Manipur',
-        'manipur': 'Manipur',
-        'NAGALAND': 'Nagaland',
-        'nagaland': 'Nagaland',
-        'MIZORAM': 'Mizoram',
-        'mizoram': 'Mizoram',
-        'ARUNACHAL PRADESH': 'Arunachal Pradesh',
-        'arunachal pradesh': 'Arunachal Pradesh',
-        'SIKKIM': 'Sikkim',
-        'sikkim': 'Sikkim',
-        'DELHI': 'Delhi',
-        'delhi': 'Delhi',
-        'NCT OF DELHI': 'Delhi',
-        'NCT Delhi': 'Delhi',
-        'CHANDIGARH': 'Chandigarh',
-        'chandigarh': 'Chandigarh',
-        'PUDUCHERRY': 'Puducherry',
-        'PONDICHERRY': 'Puducherry',
-        'puducherry': 'Puducherry',
-        'ANDAMAN AND NICOBAR': 'Andaman And Nicobar Islands',
-        'ANDAMAN & NICOBAR': 'Andaman And Nicobar Islands',
-        'ANDAMAN AND NICOBAR ISLANDS': 'Andaman And Nicobar Islands',
-        'LAKSHADWEEP': 'Lakshadweep',
-        'lakshadweep': 'Lakshadweep',
-        'LADAKH': 'Ladakh',
-        'ladakh': 'Ladakh',
-        'DADRA AND NAGAR HAVELI': 'Dadra And Nagar Haveli',
-        'DAMAN AND DIU': 'Daman And Diu',
-        'DAMAN & DIU': 'Daman And Diu',
-        'Dadra and Nagar Haveli and Daman and Diu': 'Dadra And Nagar Haveli And Daman And Diu',
-    }
-    
-    # Invalid entries to filter out (numeric codes, missing sentinels, etc.)
-    INVALID_STATES = {
-        '100000', '0', 'NA', 'N/A', 'NONE', 'NULL', 'NAN', '<NA>', '',
-    }
+
 
     df = df.copy()
     if state_column not in df.columns:
@@ -350,6 +357,12 @@ def normalize_state_names(df: pd.DataFrame, state_column: str = 'state') -> pd.D
     
     # Apply state name mapping
     df[state_column] = df[state_column].replace(STATE_MAPPING)
+
+    # Aliases are listed in a few fixed casings; match any other casing
+    # (e.g. "Jammu & Kashmir") case-insensitively.
+    df[state_column] = (
+        df[state_column].str.upper().map(UPPER_STATE_MAPPING).fillna(df[state_column])
+    )
     
     # Title case for remaining states (basic normalization)
     # Only apply to all-caps entries that weren't in the mapping
